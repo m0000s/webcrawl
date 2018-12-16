@@ -18,7 +18,24 @@ Con este comando instalaremos los modulos y librerias necesarias.
 Despues de hacer lo anterior vamos a ejecutar le herramienta con el comando python 
 Compatible con nuestro sistema operativo:
 
-$[python] webc.py <query>
+$[python] webc.py <query(s)> <opcion>
 
 En el caso de poner solo una query pones la query y ya pero en caso de poner mas de una query
 Pondras las querys que siguen separadas por un espacio(" ").
+
+Para usar esta herramienta debes de tener en cuenta que hay 2 distintos modulos:
+
++Linea de comandos
++Directo
+
+Si prefieres la linea de comandos debes ejecutar:
+
+$[python] webc.py
+
+Si prefieres hacer directamente la busqueda puedes:
+
+$[python] webc.py <query> -r
+
+Y si te quedaste atorado y no sabes que hacer puedes poner:
+
+$[python] webc.py -h 
