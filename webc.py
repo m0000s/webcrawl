@@ -14,7 +14,7 @@ def parse_urls(query,code):
     #Lee la lista de links recaudados
     for p in range(len(outp_uri)):
         print('    ['+G+' _ '+W+']'+outp_uri[p]['href'])
-
+    print(G+'    [ '+W+'_'+G+' ] Succes '+W+str(p)+' results found.\n')
 R = "\033[1;31m"
 G = "\033[1;32m"
 B = "\033[1;34m"
@@ -27,18 +27,22 @@ if len(sys.argv) == 1:
    print(usage)
 #Verifica si es más de 1 query
 elif len(sys.argv) > 2:
-   search_links = list(','*len(sys.argv))
-   #Agrega las query's a las urls que se parsearán
+   search_links = list(','*(len(sys.argv)-1))
+   syss = []
    try:
        k = 1
-       for k in range(len(sys.argv)):
-           search_links[k] = 'http://www.webcrawler.com/serp?q='+sys.argv[k]
+       #Crea una lista aparte de la misma lista sys.argv
+       #para evitar rosamientos con sys.argv[0]
+       while k < len(sys.argv):
+          syss.append(sys.argv[k])
+          k += 1
        #Hace la busqueda y ejecuta la funcion donde se parsea la url
        for o in range(len(search_links)):
+           search_links[o] = 'http://www.webcrawler.com/serp?q='+syss[o]
            code = request.urlopen(search_links[o]).read()
-           parse_urls(sys.argv[o+1],code)
+           parse_urls(syss[o],code)
            sleep(5) #Espera 1 segundo
-   except IndexError:
+   except SyntaxError:
        print(R+'Error. '+W+'Input any query.\n'+usage)
 #Verifica si es 1 query (verifica 2 porque en sí
 #ejecutar webc.py cuenta como 'query')
