@@ -8,17 +8,30 @@ from urllib import request
 
 #
 #webcrawler.com search class
+class yahoo_com:
+    def parse_titles(i):
+        outp_title = soup.find_all('a',string=True)
+        return outp_title[i].get_text()
+    def parse_urls(query,code):
+        soup = BeautifulSoup(code,'html.parser')
+        outp_uri = soup.find_all('a',class_=' ac-algo fz-l ac-21th lh-24')
+        print(W+'\n[['+B+'[ Searching '+G+query+B+' results. ]'+W+']]')
+        for p in range(len(outp_uri)):
+            url = outp_uri[p]['href']
+            title = parse_titles(url,p)
+            print('    ['+G+' _ '+W+']'+url+R+' - '+W+title)
+        print(G+'    [ '+W+'_'+G+' ] Succes '+W+str(p)+' results found.\n')
 class webcrawler_com:
+    def parse_titles(uri,i):
+        outp_title = soup.find_all('a',string=True)
+        return outp_title[i].get_text()
     def parse_urls(query,code):
         soup = BeautifulSoup(code,'html.parser')
         outp_uri = soup.find_all('a',class_='web-bing__title')
         print(W+'\n[['+B+'[ Searching '+G+query+B+' results. ]'+W+']]')
-        def parse_titles(uri,i):
-            outp_title = soup.find_all('a',string=True)
-            return outp_title[i].get_text()
         for p in range(len(outp_uri)):
             url = outp_uri[p]['href']
-            title = parse_titles(url,p)
+            title = parse_titles(p)
             print('    ['+G+' _ '+W+']'+url+R+' - '+W+title)
         print(G+'    [ '+W+'_'+G+' ] Succes '+W+str(p)+' results found.\n')
 banner = '''
@@ -72,11 +85,22 @@ def search():
 def menu():
     def show_help():
        print(R+'\nCommand      Function\n'+W+'exit         Exit to webc.\n?            Display help.\nadd <query>  Add query to the config search.\nrun          Run the config.\n')
-    commands = 'exit','run','?','add'
+    def run(engine,querys):
+        try:
+            if len(querys) > 1 and engine:
+                search()
+            elif len(querys) == 1:
+                print(R+'Could not '+W+'have querys. Add querys.')
+            elif engine == False:
+                print(R+'Could not '+W+'selected a engine.')
+        except KeyboardInterrupt:
+             print(R+'Exiting '+W+'Control+c pushed.')
+    commands = 'exit','run','?','add','engine'
     print('Input \'?\' for help.')
     while True:
+       engine = False
        try:
-           e = input(W+'$'+B+'w3bc'+R+' >> '+B).split(' ')
+           e = input(W+'$'+B+'w3bc'+R+' >> '+W).split(' ')
        except KeyboardInterrupt:
            print(R+'\nExiting '+W+'Control+c pushed.')
            break
@@ -86,16 +110,22 @@ def menu():
           elif e[0] == '?':
              show_help()
           elif e[0] == 'run':
-             try:
-                 if len(querys) > 1:
-                     search()
-                 elif len(querys) == 1:
-                     print(R+'Not '+W+'have querys. Add querys.')
-             except KeyboardInterrupt:
-                 print(R+'Exiting '+W+'Control+c pushed.')
-                 break
-          if e[0] == 'add':
+             run(engine,querys)
+          elif e[0] == 'add':
              querys.append(e[1])
+          elif e[0] == 'engine':
+             if len(e) < 2:
+                 print(R+'Error:'+W+' Usage: \'engine yahoo\' or \'engine webcrawler\''+W+'.')
+                 engine = False
+             elif e[1] not in ('yahoo','wbcrawler'):
+                 print(R+'Error: '+W+'Unable to locate this search engine.')
+                 engine = False
+             elif e[1] == 'yahoo':
+                 engine = True
+                 engine_name = 'yahoo_com'
+             elif e[1] == 'webcrawler':
+                 engine = True
+                 engine_name = 'webcrawler_com'
        elif e not in commands:
             print(R+'Error: '+W+'Command \''+e[0]+'\' not found')
 
